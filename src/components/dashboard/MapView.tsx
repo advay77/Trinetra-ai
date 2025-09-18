@@ -22,11 +22,45 @@ export const MapView = ({ onMapClick, selectedPosition }: MapViewProps) => {
   const [showAnomalies, setShowAnomalies] = useState(true);
   const [showHeatmap, setShowHeatmap] = useState(false);
 
-  // Mock data for demonstration
+  // Mock data for demonstration - 20+ incidents across Delhi
   const mockAnomalies = [
-    { id: 1, position: [28.6139, 77.2090] as [number, number], type: "pothole", severity: "high" },
-    { id: 2, position: [28.6129, 77.2300] as [number, number], type: "barricade", severity: "medium" },
-    { id: 3, position: [28.6200, 77.2150] as [number, number], type: "pothole", severity: "low" },
+    // Connaught Place Area
+    { id: 1, position: [28.6304, 77.2177] as [number, number], type: "pothole", severity: "high", confidence: 0.94, timestamp: "2024-01-15 10:30" },
+    { id: 2, position: [28.6289, 77.2065] as [number, number], type: "barricade", severity: "medium", confidence: 0.87, timestamp: "2024-01-15 11:15" },
+    { id: 3, position: [28.6315, 77.2245] as [number, number], type: "crack", severity: "low", confidence: 0.76, timestamp: "2024-01-15 09:45" },
+    
+    // India Gate Area
+    { id: 4, position: [28.6129, 77.2295] as [number, number], type: "pothole", severity: "high", confidence: 0.91, timestamp: "2024-01-15 14:20" },
+    { id: 5, position: [28.6097, 77.2342] as [number, number], type: "debris", severity: "medium", confidence: 0.83, timestamp: "2024-01-15 15:10" },
+    { id: 6, position: [28.6158, 77.2273] as [number, number], type: "waterlog", severity: "high", confidence: 0.88, timestamp: "2024-01-15 08:30" },
+    
+    // Karol Bagh Area
+    { id: 7, position: [28.6519, 77.1904] as [number, number], type: "pothole", severity: "medium", confidence: 0.79, timestamp: "2024-01-15 12:45" },
+    { id: 8, position: [28.6487, 77.1958] as [number, number], type: "barricade", severity: "low", confidence: 0.72, timestamp: "2024-01-15 13:20" },
+    { id: 9, position: [28.6541, 77.1873] as [number, number], type: "crack", severity: "medium", confidence: 0.84, timestamp: "2024-01-15 16:15" },
+    
+    // Nehru Place Area
+    { id: 10, position: [28.5494, 77.2500] as [number, number], type: "pothole", severity: "high", confidence: 0.92, timestamp: "2024-01-15 11:00" },
+    { id: 11, position: [28.5516, 77.2531] as [number, number], type: "debris", severity: "medium", confidence: 0.81, timestamp: "2024-01-15 14:45" },
+    { id: 12, position: [28.5472, 77.2469] as [number, number], type: "waterlog", severity: "low", confidence: 0.77, timestamp: "2024-01-15 07:30" },
+    
+    // Rajouri Garden Area
+    { id: 13, position: [28.6465, 77.1205] as [number, number], type: "pothole", severity: "medium", confidence: 0.86, timestamp: "2024-01-15 10:15" },
+    { id: 14, position: [28.6491, 77.1157] as [number, number], type: "crack", severity: "high", confidence: 0.89, timestamp: "2024-01-15 12:00" },
+    { id: 15, position: [28.6438, 77.1253] as [number, number], type: "barricade", severity: "low", confidence: 0.74, timestamp: "2024-01-15 15:30" },
+    
+    // Dwarka Area
+    { id: 16, position: [28.5921, 77.0460] as [number, number], type: "pothole", severity: "high", confidence: 0.93, timestamp: "2024-01-15 09:20" },
+    { id: 17, position: [28.5895, 77.0521] as [number, number], type: "debris", severity: "medium", confidence: 0.82, timestamp: "2024-01-15 13:45" },
+    { id: 18, position: [28.5947, 77.0399] as [number, number], type: "waterlog", severity: "medium", confidence: 0.85, timestamp: "2024-01-15 11:30" },
+    
+    // Lajpat Nagar Area
+    { id: 19, position: [28.5678, 77.2436] as [number, number], type: "pothole", severity: "low", confidence: 0.78, timestamp: "2024-01-15 16:00" },
+    { id: 20, position: [28.5702, 77.2389] as [number, number], type: "crack", severity: "medium", confidence: 0.80, timestamp: "2024-01-15 08:45" },
+    
+    // Rohini Area
+    { id: 21, position: [28.7041, 77.1025] as [number, number], type: "barricade", severity: "high", confidence: 0.90, timestamp: "2024-01-15 14:00" },
+    { id: 22, position: [28.7012, 77.1089] as [number, number], type: "pothole", severity: "medium", confidence: 0.83, timestamp: "2024-01-15 17:15" },
   ];
 
   useEffect(() => {
@@ -74,10 +108,28 @@ export const MapView = ({ onMapClick, selectedPosition }: MapViewProps) => {
 
         const marker = L.marker(anomaly.position, { icon })
           .bindPopup(`
-            <div class="p-2">
-              <h3 class="font-semibold text-sm">${anomaly.type.charAt(0).toUpperCase() + anomaly.type.slice(1)}</h3>
-              <p class="text-xs text-gray-600">Severity: ${anomaly.severity}</p>
-              <p class="text-xs text-gray-500">ID: ${anomaly.id}</p>
+            <div class="p-3 min-w-[200px]">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="font-semibold text-sm capitalize">${anomaly.type}</h3>
+                <span class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700">#${anomaly.id}</span>
+              </div>
+              <div class="space-y-1">
+                <div class="flex justify-between text-xs">
+                  <span class="text-gray-600">Severity:</span>
+                  <span class="font-medium capitalize ${anomaly.severity === 'high' ? 'text-red-600' : anomaly.severity === 'medium' ? 'text-orange-600' : 'text-yellow-600'}">${anomaly.severity}</span>
+                </div>
+                <div class="flex justify-between text-xs">
+                  <span class="text-gray-600">Confidence:</span>
+                  <span class="font-medium">${(anomaly.confidence * 100).toFixed(1)}%</span>
+                </div>
+                <div class="flex justify-between text-xs">
+                  <span class="text-gray-600">Detected:</span>
+                  <span class="font-medium">${anomaly.timestamp}</span>
+                </div>
+              </div>
+              <div class="mt-2 pt-2 border-t border-gray-200">
+                <button class="text-xs text-blue-600 hover:text-blue-800 font-medium">View Details</button>
+              </div>
             </div>
           `);
 

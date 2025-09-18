@@ -164,46 +164,69 @@
 @layer components {
   /* Button variants using design system */
   .btn-hero {
-    @apply bg-gradient-primary text-primary-foreground font-semibold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-normal hover:scale-105;
+    @apply bg-gradient-primary text-primary-foreground font-semibold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-normal hover:scale-105 relative overflow-hidden;
+  }
+  
+  .btn-hero::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] transition-transform duration-700;
+  }
+  
+  .btn-hero:hover::before {
+    @apply translate-x-[100%];
   }
   
   .btn-safety {
-    @apply bg-accent text-accent-foreground font-medium px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-fast hover:-translate-y-0.5;
+    @apply bg-accent text-accent-foreground font-medium px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-fast hover:-translate-y-0.5 relative overflow-hidden;
+  }
+
+  .btn-safety::after {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300;
   }
 
   .btn-success {
-    @apply bg-gradient-success text-success-foreground font-medium px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-fast;
+    @apply bg-gradient-success text-success-foreground font-medium px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-fast hover:brightness-110;
   }
 
-  /* Card variants */
+  /* Enhanced Card variants */
   .card-elevated {
-    @apply bg-card border border-border rounded-lg shadow-md hover:shadow-lg transition-shadow duration-normal;
+    @apply bg-card border border-border rounded-lg shadow-md hover:shadow-lg transition-all duration-normal backdrop-blur-sm;
   }
 
   .card-interactive {
-    @apply card-elevated hover:scale-[1.02] cursor-pointer transition-transform duration-fast;
+    @apply card-elevated hover:scale-[1.02] cursor-pointer transition-all duration-normal hover:shadow-xl hover:border-primary/20;
   }
 
-  /* Text gradient utilities */
+  /* Improved Text gradient utilities */
   .text-gradient-primary {
-    @apply bg-gradient-to-r from-primary to-primary-hover bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary via-primary-hover to-primary bg-clip-text text-transparent;
   }
 
   .text-gradient-accent {
-    @apply bg-gradient-to-r from-accent to-warning bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-accent via-warning to-accent bg-clip-text text-transparent;
   }
 
-  /* Animation utilities */
+  /* Enhanced Animation utilities */
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
 
   .animate-fade-in-up {
-    animation: fadeInUp 0.5s ease-out forwards;
+    animation: fadeInUp 0.6s ease-out forwards;
   }
 
   .animate-pulse-slow {
     animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Interactive hover effects */
+  .hover-glow {
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-primary/25;
+  }
+
+  .hover-lift {
+    @apply transition-transform duration-200 hover:-translate-y-1;
   }
 }
 

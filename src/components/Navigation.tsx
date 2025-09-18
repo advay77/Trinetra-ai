@@ -10,6 +10,7 @@ import {
   Play
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -64,6 +65,17 @@ export const Navigation = () => {
             })}
           </div>
 
+          {/* Right side - Desktop Actions */}
+          <div className="hidden md:flex items-center space-x-4">
+            <ThemeToggle />
+            <Button variant="outline" size="sm">
+              Contact Support
+            </Button>
+            <Button size="sm" className="btn-safety">
+              Emergency Alert
+            </Button>
+          </div>
+
           {/* Mobile menu button */}
           <Button
             variant="ghost"
@@ -104,6 +116,20 @@ export const Navigation = () => {
                   </Link>
                 );
               })}
+            </div>
+
+            {/* Mobile Actions */}
+            <div className="pt-6 border-t border-border space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Theme</span>
+                <ThemeToggle />
+              </div>
+              <Button variant="outline" size="sm" className="w-full justify-start">
+                Contact Support
+              </Button>
+              <Button size="sm" className="btn-safety w-full justify-start">
+                Emergency Alert
+              </Button>
             </div>
           </div>
         )}

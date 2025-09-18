@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Navigation } from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { 
   Play, 
   Pause, 
@@ -11,13 +13,18 @@ import {
   Clock,
   CheckCircle,
   AlertTriangle,
-  TrendingUp
+  TrendingUp,
+  Upload,
+  FileVideo
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const Simulation = () => {
   const { toast } = useToast();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Mock simulation data
   const simulationMetrics = {
@@ -85,27 +92,92 @@ const Simulation = () => {
     });
   };
 
+  const handleVideoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && file.type.startsWith('video/')) {
+      setUploadedVideo(file);
+      const url = URL.createObjectURL(file);
+      setVideoUrl(url);
+      toast({
+        title: "Video Uploaded Successfully",
+        description: `${file.name} is ready for simulation analysis.`,
+      });
+    } else {
+      toast({
+        title: "Invalid File Type",
+        description: "Please upload a valid video file (MP4, MOV, AVI, etc.)",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
-              Simulation Results
+              AI Simulation Analysis
             </h1>
             <p className="text-muted-foreground">
-              Analysis of infrastructure monitoring simulation run #SIM-2024-001
+              Advanced infrastructure monitoring and safety analysis platform
             </p>
           </div>
           
-          <Button onClick={handleDownload} className="btn-success mt-4 md:mt-0">
-            <Download className="w-4 h-4 mr-2" />
-            Download Results
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-3 mt-4 md:mt-0">
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleVideoUpload}
+              accept="video/*"
+              className="hidden"
+            />
+            <Button onClick={handleUploadClick} variant="outline" className="flex items-center gap-2">
+              <Upload className="w-4 h-4" />
+              Upload Video
+            </Button>
+            <Button onClick={handleDownload} className="btn-success">
+              <Download className="w-4 h-4 mr-2" />
+              Download Results
+            </Button>
+          </div>
         </div>
+
+        {/* Upload Section - Show when no video */}
+        {!videoUrl && (
+          <Card className="card-elevated mb-8">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <FileVideo className="w-5 h-5 text-primary" />
+                <span>Upload Infrastructure Video for Analysis</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div 
+                onClick={handleUploadClick}
+                className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-12 text-center hover:border-primary/50 hover:bg-muted/50 transition-all cursor-pointer"
+              >
+                <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                  <Upload className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Upload Your Infrastructure Video</h3>
+                <p className="text-muted-foreground mb-4">
+                  Drop your video file here or click to browse. Supports MP4, MOV, AVI formats up to 100MB.
+                </p>
+                <Button onClick={handleUploadClick} className="btn-safety">
+                  Choose Video File
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Video Player Section */}
@@ -118,20 +190,30 @@ const Simulation = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {/* Mock Video Player */}
+                {/* Video Player */}
                 <div className="relative bg-muted rounded-lg aspect-video mb-4 overflow-hidden">
-                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10">
-                    <div className="text-center space-y-4">
-                      <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
-                        <Play className="w-8 h-8 text-primary" />
+                  {videoUrl ? (
+                    <video
+                      src={videoUrl}
+                      className="w-full h-full object-cover"
+                      controls={false}
+                      onPlay={() => setIsPlaying(true)}
+                      onPause={() => setIsPlaying(false)}
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10">
+                      <div className="text-center space-y-4">
+                        <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+                          <Play className="w-8 h-8 text-primary" />
+                        </div>
+                        <p className="text-muted-foreground">
+                          AI analysis results will appear here
+                          <br />
+                          <span className="text-sm">Upload a video to start simulation</span>
+                        </p>
                       </div>
-                      <p className="text-muted-foreground">
-                        Simulation video would display here
-                        <br />
-                        <span className="text-sm">(MP4 from /api/simulate endpoint)</span>
-                      </p>
                     </div>
-                  </div>
+                  )}
                   
                   {/* Mock progress bar */}
                   <div className="absolute bottom-0 left-0 right-0 bg-black/20 p-4">
