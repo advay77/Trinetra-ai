@@ -31,7 +31,8 @@ export const ControlPanel = ({ onShowReportModal, onShowRouteModal }: ControlPan
           <CardContent className="space-y-3">
             <Button 
               onClick={onShowReportModal}
-              className="w-full btn-safety justify-start"
+              variant="destructive"
+              className="w-full justify-start"
             >
               <Camera className="w-4 h-4 mr-2" />
               Report Issue
@@ -39,29 +40,30 @@ export const ControlPanel = ({ onShowReportModal, onShowRouteModal }: ControlPan
             
             <Button 
               onClick={onShowRouteModal}
-              className="w-full btn-success justify-start"
+              variant="default"
+              className="w-full justify-start bg-green-600 hover:bg-green-700 text-white"
             >
               <Route className="w-4 h-4 mr-2" />
               Emergency Route
             </Button>
             
-          <Button 
-            variant="outline" 
-            className="w-full justify-start"
-            onClick={() => window.location.href = '/analytics'}
-          >
-            <TrendingUp className="w-4 h-4 mr-2" />
-            View Analytics
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            className="w-full justify-start"
-            onClick={() => window.location.href = '/simulation'}
-          >
-            <Play className="w-4 h-4 mr-2" />
-            View Simulation
-          </Button>
+            <Button 
+              variant="outline" 
+              className="w-full justify-start"
+              onClick={() => window.location.href = '/analytics'}
+            >
+              <TrendingUp className="w-4 h-4 mr-2" />
+              View Analytics
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              className="w-full justify-start"
+              onClick={() => window.location.href = '/simulation'}
+            >
+              <Play className="w-4 h-4 mr-2" />
+              View Simulation
+            </Button>
           </CardContent>
         </Card>
 

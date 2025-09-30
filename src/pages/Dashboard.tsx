@@ -5,15 +5,15 @@ import { ReportModal } from "@/components/dashboard/ReportModal";
 import { RouteModal } from "@/components/dashboard/RouteModal";
 import { Navigation } from "@/components/Navigation";
 
-const Dashboard = () => {
+export const Dashboard = () => {
   const [showReportModal, setShowReportModal] = useState(false);
   const [showRouteModal, setShowRouteModal] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<[number, number] | null>(null);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
       <Navigation />
-      <div className="flex h-[calc(100vh-4rem)]">
+      <div className="flex h-[calc(100vh-4rem)] relative z-0">
         <ControlPanel 
           onShowReportModal={() => setShowReportModal(true)}
           onShowRouteModal={() => setShowRouteModal(true)}
@@ -26,20 +26,30 @@ const Dashboard = () => {
         </div>
       </div>
       
-      {showReportModal && (
-        <ReportModal
-          position={selectedPosition}
-          onClose={() => setShowReportModal(false)}
-        />
+      {/* Modal Backdrop */}
+      {(showReportModal || showRouteModal) && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" />
       )}
       
-      {showRouteModal && (
-        <RouteModal
-          onClose={() => setShowRouteModal(false)}
-        />
-      )}
+      {/* Modals */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+        {showReportModal && (
+          <div className="w-full max-w-md pointer-events-auto">
+            <ReportModal
+              position={selectedPosition}
+              onClose={() => setShowReportModal(false)}
+            />
+          </div>
+        )}
+        
+        {showRouteModal && (
+          <div className="w-full max-w-2xl pointer-events-auto">
+            <RouteModal
+              onClose={() => setShowRouteModal(false)}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
-
-export default Dashboard;
